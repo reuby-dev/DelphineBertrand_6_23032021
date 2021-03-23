@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb+srv://reuby:test@cluster0.vhv8q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 //CORS
 app.use((req, res, next) => {
