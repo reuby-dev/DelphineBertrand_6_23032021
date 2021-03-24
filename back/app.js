@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+//path du serveur
+const path = require('path');
 //routeurs
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
@@ -22,6 +24,9 @@ app.use((req, res, next) => {
 
 //body parser
 app.use(express.json());
+
+//gestionnaire de routage des images statique
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //routes
 app.use('/api/sauce', sauceRoutes);
