@@ -1,17 +1,51 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs'); //file system de node
 
-// exports.createThing = (req, res, next) => {
-//     const thingObject = JSON.parse(req.body.thing); //analyse pour le rendre utilisable sous forme de data, et non de json
-//     delete thingObject._id;
-//     const thing = new Thing({
-//       ...thingObject,
-//       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur, puis ajoute '/images/' et le nom du fichier pour compléter l'url
-//     });
-//     thing.save()
-//       .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-//       .catch(error => res.status(400).json({ error }));
-//   };
+exports.createSauce = (req, res, next) => {
+    const sauceObject = JSON.parse(req.body.sauce);
+    delete sauceObject._id; //?
+    console.log('sauce Object: ', sauceObject);
+    const sauce = new Sauce({
+        // objectID: req.body._id,    
+        ...sauceObject,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur, puis ajoute '/images/' et le nom du fichier pour compléter l'url
+        // likes: 0,
+        // dislikes: 0
+    });
+    sauce.save()
+      .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))
+      .catch(error => res.status(400).json({ error }));
+};
+
+exports.getAllSauces = (req, res, next) => {
+    Sauce.find().then(
+        (sauce) => {
+            res.status(200).json(sauce);
+        }
+    ).catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );  
+};
+
+exports.getOneSauce = (req, res, next) => {
+    Sauce.findOne({
+        _id: req.params.id
+    }).then(
+        (sauce) => {
+            res.status(200).json(sauce);
+        }
+    ).catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );
+};
 
 // exports.modifyThing = (req, res, next) => {
 //     const thingObject = req.file ? //regarde si req.file existe
