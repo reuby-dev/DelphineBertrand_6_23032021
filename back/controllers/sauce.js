@@ -3,9 +3,6 @@ const fs = require('fs'); //file system de node
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
-    // console.log('sauce Object: ', sauceObject);
-    console.log(req.headers);
-    // console.log('sauce Object: ', sauceObject);
     const sauce = new Sauce({ 
         ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur, puis ajoute '/images/' et le nom du fichier pour compléter l'url
