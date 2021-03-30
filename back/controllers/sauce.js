@@ -22,8 +22,8 @@ exports.likeSauce = (req, res, next) => {
     const like = req.body.like;
     const dislike = req.body.dislike;
     const userId = req.body.userId;
-    const usersLiked = [];
-    const usersDisliked = [];
+    const usersLiked = req.body.usersLiked;
+    const usersDisliked = req.body.usersDisliked;
 
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
