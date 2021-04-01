@@ -6,8 +6,8 @@ exports.createSauce = (req, res, next) => {
     const sauce = new Sauce({ 
         ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur, puis ajoute '/images/' et le nom du fichier pour compléter l'url
-        like: 0,
-        dislike: 0,
+        likes: 0,
+        dislikes: 0,
         usersLiked: [],
         usersDisliked: [],
     });
@@ -19,11 +19,9 @@ exports.createSauce = (req, res, next) => {
 
 
 exports.likeSauce = (req, res, next) => {
+    console.log(req.body);
     const like = req.body.like;
-    const dislike = req.body.dislike;
     const userId = req.body.userId;
-    const usersLiked = req.body.usersLiked;
-    const usersDisliked = req.body.usersDisliked;
 
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
@@ -31,7 +29,7 @@ exports.likeSauce = (req, res, next) => {
                 case -1:
                     console.log('cas -1', req.body),
                     sauce.updateOne(
-                        {$push: {usersDisliked: userId}, $inc: {dislike: +1}}
+                        {$push: {usersDisliked: userId}, $inc: {dislikes: +1}}
                     )
                 .then(() => res.status(200).json({ message: 'sauce non aimée'}))
                 .catch(error => res.status(400).json({error}));
@@ -40,7 +38,7 @@ exports.likeSauce = (req, res, next) => {
                 case 0 :
                     sauce.updateOne(
                         console.log('cas 0', req.body),
-                        {$splice: {usersLiked: userId}, $inc: {like: -1}}
+                        {$splice: {usersLiked: userId}, $inc: {likes: -1}}
                     )
                 .then(() => res.status(200).json({ message: 'annulation sauce aimée'}))
                 .catch(error => res.status(400).json({error}));
@@ -49,7 +47,7 @@ exports.likeSauce = (req, res, next) => {
                 case 1 :
                     sauce.updateOne(
                         console.log('cas 1', req.body),
-                        {$push: {usersLiked: userId}, $inc: {like: +1}},
+                        {$push: {usersLiked: userId}, $inc: {likes: +1}},
                     )
                 .then(() => res.status(200).json({ message: 'annulation sauce aimée'}))
                 .catch(error => res.status(400).json({error}));
@@ -78,6 +76,7 @@ exports.getOneSauce = (req, res, next) => {
         _id: req.params.id
     }).then(
         (sauce) => {
+            console.log(sauce);
             res.status(200).json(sauce);
         }
     ).catch(
