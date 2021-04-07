@@ -9,7 +9,7 @@ exports.createSauce = (req, res, next) => {
         likes: 0,
         dislikes: 0,
         usersLiked: [],
-        usersDisliked: [],
+        usersDisliked: []
     });
     // console.log(sauce);
     sauce.save()
@@ -25,34 +25,44 @@ exports.likeSauce = (req, res, next) => {
 
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-            switch(like){
-                case -1:
-                    console.log('cas -1', req.body),
-                    sauce.updateOne(
-                        {$push: {usersDisliked: userId}, $inc: {dislikes: +1}}
-                    )
-                .then(() => res.status(200).json({ message: 'sauce non aimée'}))
-                .catch(error => res.status(400).json({error}));
-                break;
+            const hasLiked = sauce.usersLiked.includes(userId);
+            const hasDisliked = sauce.usersDisliked.includes(userId);
 
-                case 0 :
-                    sauce.updateOne(
-                        console.log('cas 0', req.body),
-                        {$splice: {usersLiked: userId}, $inc: {likes: -1}}
-                    )
-                .then(() => res.status(200).json({ message: 'annulation sauce aimée'}))
-                .catch(error => res.status(400).json({error}));
-                break;
+            const hasNotInteractedYet = !hasLiked && !hasDisliked;
+            if (hasNotInteractedYet) {
+                let updateQuery = {};
+                let message = "";
 
-                case 1 :
-                    sauce.updateOne(
-                        console.log('cas 1', req.body),
-                        {$push: {usersLiked: userId}, $inc: {likes: +1}},
-                    )
-                .then(() => res.status(200).json({ message: 'annulation sauce aimée'}))
-                .catch(error => res.status(400).json({error}));
-                break;
+                
+                if(like === 1) {
+                    updateQuery = {$push: {usersLiked: userId}, $inc: {likes: +1}};
+                    message = 'sauce aimée';
+                        
+                } else if (like === -1) {
+                    updateQuery = {$push: {usersDisliked: userId}, $inc: {dislikes: +1}};
+                    message = 'sauce non aimée';
+                }
+
+                return Sauce.updateOne({ _id: req.params.id }, updateQuery)
+                    .then(() => res.status(200).json({ message }))
+                    .catch(error => res.status(400).json({error}));
             }
+
+            if (like === 0) {
+                let updateQuery = {};
+                let message = "";
+                if (hasLiked) {
+                    updateQuery = {$pull: {usersLiked: userId}, $inc:{ likes: -1}};
+                    message =  "Annulation - Sauce aimée"
+                } else if (hasDisliked) {
+                    updateQuery = {$pull: {usersDisliked: userId}, $inc:{ dislikes: -1}};
+                    message =  "Annulation - Sauce non aimée"
+                    
+                }
+                return Sauce.updateOne({ _id: req.params.id },updateQuery )
+                    .then(() => res.status(200).json({ message }))
+                    .catch(error => res.status(400).json({error}));
+            }          
         })
 };
 
