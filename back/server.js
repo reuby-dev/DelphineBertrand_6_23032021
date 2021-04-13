@@ -1,7 +1,7 @@
-const http = require('http');
+const http = require('http'); //permet de créer un serveur http
 const app = require('./app');
 
-const normalizePort = val => {
+const normalizePort = val => { //renvoie un port valide fourni sous la forme d'un numéro ou d'une chaine
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -12,7 +12,8 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000'); //renvoie un port valide fourni sous la forme d'un numéro ou d'une chaine
+
+const port = normalizePort(process.env.PORT || '3000'); //écoute soit le port par défaut fourni par la plateforme de déploiement, soit le port 3000
 app.set('port', port);
 
 const errorHandler = error => { //recherche les différentes erreurs et les gère

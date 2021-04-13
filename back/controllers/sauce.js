@@ -1,17 +1,17 @@
 const Sauce = require('../models/sauce');
-const fs = require('fs'); //file system de node
+const fs = require('fs'); //file system de node pour la gestion des images
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({ 
         ...sauceObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur, puis ajoute '/images/' et le nom du fichier pour compléter l'url
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, //req.protocol obtient 'http', ajoute '://', et résous l'hote du serveur,
+        // puis ajoute '/images/' et le nom du fichier pour compléter l'url
         likes: 0,
         dislikes: 0,
         usersLiked: [],
         usersDisliked: []
     });
-    // console.log(sauce);
     sauce.save()
       .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))
       .catch(error => res.status(400).json({ error }));
@@ -32,7 +32,6 @@ exports.likeSauce = (req, res, next) => {
             if (hasNotInteractedYet) {
                 let updateQuery = {};
                 let message = "";
-
                 
                 if(like === 1) {
                     updateQuery = {$push: {usersLiked: userId}, $inc: {likes: +1}};

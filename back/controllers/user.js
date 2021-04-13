@@ -1,12 +1,19 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { createHmac } = require('crypto');
+const secret = 'jaimelesponeysetinternetaussi'
 
 exports.signup = (req, res, next) => {
+
+    const hashEmail = createHmac('sha256', secret)
+                      .update(req.body.email)
+                      .digest('hex');
+
     bcrypt.hash(req.body.password, 10) //appelle la fonction de hachage et "sale" le mdp 10 fois
         .then(hash => {
             const user = new User({ //crée l'utilisateur
-                email: req.body.email,
+                email: hashEmail,
                 password: hash
             });
             user.save()
@@ -17,7 +24,12 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email }) //vérifie que l'email entré par l'utilisateur correspond à un utilisateur existant de la BDD
+
+  const hashEmail = createHmac('sha256', secret)
+                    .update(req.body.email)
+                    .digest('hex');
+
+    User.findOne({ email: hashEmail }) //vérifie que l'email entré par l'utilisateur correspond à un utilisateur existant de la BDD
       .then(user => {
         if (!user) {
           return res.status(401).json({ error: 'Utilisateur non trouvé !' });
