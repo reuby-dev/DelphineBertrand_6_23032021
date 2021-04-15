@@ -25,10 +25,10 @@ exports.likeSauce = (req, res, next) => {
 
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-            const hasLiked = sauce.usersLiked.includes(userId);
+            const hasLiked = sauce.usersLiked.includes(userId); //renvoie vrai ou faux, permet de vérifier la présence de l'id de l'utilisateur dans le tableau usersLiked
             const hasDisliked = sauce.usersDisliked.includes(userId);
-
             const hasNotInteractedYet = !hasLiked && !hasDisliked;
+
             if (hasNotInteractedYet) {
                 let updateQuery = {};
                 let message = "";

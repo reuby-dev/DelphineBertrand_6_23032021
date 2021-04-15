@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 //middleware protection des routes
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
