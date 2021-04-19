@@ -1,5 +1,5 @@
 # SoPeckoko
-Cinquième projet réalisé dans le cadre de ma formation Développeur web Openclassroom. Le but était mettre en place une API pour un site d'avis gastronomique. Je ne devais par conséquent m'occuper uniquement du backend du site, le frontend étant déjà fourni par OC.
+Cinquième projet réalisé dans le cadre de ma formation Développeur web Openclassroom. Le but était mettre en place une API pour un site d'avis gastronomique. Je devais par conséquent m'occuper uniquement du backend du site, le frontend étant déjà fourni par OC.
 
 # Identité
 So Pekocko est une entreprise familiale de 10 salariés. Son activité principale est la création de sauces piquantes dont la composition est tenue secrète. Forte de son succès, l’entreprise souhaite se développer et créer une application web, dans laquelle les utilisateurs pourront ajouter leurs sauces préférées et liker ou disliker les sauces proposées par les autres.
